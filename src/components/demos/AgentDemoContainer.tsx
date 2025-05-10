@@ -21,6 +21,7 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
   const [demoStage, setDemoStage] = useState<number>(0);
+  const [isDemoComplete, setIsDemoComplete] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Use a higher threshold to ensure content is more visible before triggering
@@ -34,12 +35,13 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation]);
 
-  // Restart demo when opened
+  // Reset demo state when opened
   useEffect(() => {
     if (isOpen) {
       setConversation([]);
       setCurrentMessageIndex(0);
       setDemoStage(0);
+      setIsDemoComplete(false);
       
       // Start the conversation
       const timer = setTimeout(() => {
@@ -52,17 +54,25 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
 
   // Handle demo stage advancement based on conversation progress
   useEffect(() => {
-    if (currentMessageIndex === 2 && demoStage === 0) {
-      setDemoStage(1);
-    } else if (currentMessageIndex === 4 && demoStage === 1) {
-      setDemoStage(2);
-    } else if (currentMessageIndex >= 6 && demoStage === 2) {
-      setDemoStage(3);
+    if (currentMessageIndex >= agent.demoConversation.length) {
+      setIsDemoComplete(true);
+      return;
     }
-  }, [currentMessageIndex, demoStage]);
+
+    // Only advance stages if we haven't completed the demo
+    if (!isDemoComplete) {
+      if (currentMessageIndex === 2 && demoStage === 0) {
+        setDemoStage(1);
+      } else if (currentMessageIndex === 4 && demoStage === 1) {
+        setDemoStage(2);
+      } else if (currentMessageIndex >= 6 && demoStage === 2) {
+        setDemoStage(3);
+      }
+    }
+  }, [currentMessageIndex, demoStage, isDemoComplete, agent.demoConversation.length]);
 
   const handleNextMessage = () => {
-    if (currentMessageIndex < agent.demoConversation.length) {
+    if (currentMessageIndex < agent.demoConversation.length && !isDemoComplete) {
       setIsTyping(true);
       
       setTimeout(() => {
@@ -73,8 +83,8 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
         setIsTyping(false);
         setCurrentMessageIndex(prev => prev + 1);
         
-        // Schedule next message if there are more
-        if (currentMessageIndex + 1 < agent.demoConversation.length) {
+        // Schedule next message if there are more and demo isn't complete
+        if (currentMessageIndex + 1 < agent.demoConversation.length && !isDemoComplete) {
           const delay = agent.demoConversation[currentMessageIndex].role === 'user' ? 1000 : 1500;
           setTimeout(handleNextMessage, delay);
         }
@@ -130,7 +140,7 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
                 </div>
               ))}
               
-              {isTyping && (
+              {isTyping && !isDemoComplete && (
                 <div className="flex justify-start">
                   <div className="bg-gray-100 rounded-lg px-4 py-3">
                     <div className="flex space-x-1">
@@ -149,7 +159,7 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
                 <input
                   type="text"
                   disabled
-                  placeholder="Type your message..."
+                  placeholder={isDemoComplete ? "Demo complete" : "Type your message..."}
                   className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                 />
                 <button
@@ -160,7 +170,9 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
                 </button>
               </div>
               <p className="text-xs text-gray-500 mt-2 text-center">
-                This is a demo conversation. Live agent interaction coming soon.
+                {isDemoComplete 
+                  ? "Demo complete. Close to view another agent."
+                  : "This is a demo conversation. Live agent interaction coming soon."}
               </p>
             </div>
           </div>
