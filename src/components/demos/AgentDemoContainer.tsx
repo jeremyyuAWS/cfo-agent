@@ -9,13 +9,15 @@ interface AgentDemoContainerProps {
   onClose: () => void;
   agent: Agent;
   children?: React.ReactNode;
+  onTagClick?: (tag: string) => void;
 }
 
 export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({ 
   isOpen, 
   onClose, 
   agent,
-  children
+  children,
+  onTagClick
 }) => {
   const [conversation, setConversation] = useState<{role: string, content: string}[]>([]);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
@@ -126,6 +128,20 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
         <div className="flex flex-col md:flex-row h-[600px]">
           {/* Chat panel */}
           <div className="md:w-1/2 flex-shrink-0 overflow-hidden flex flex-col border-r border-gray-200">
+            {/* Tags bar */}
+            {agent.tags && agent.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 px-6 pt-4 pb-2">
+                {agent.tags.map(tag => (
+                  <button
+                    key={tag}
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium px-3 py-1 rounded-full border border-gray-200 transition-colors"
+                    onClick={() => onTagClick && onTagClick(tag)}
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="flex-grow overflow-y-auto p-6 space-y-4">
               {conversation.map((message, index) => (
                 <div 
@@ -185,10 +201,19 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
           <div className="md:w-1/2 flex-shrink-0 overflow-y-auto p-6 bg-gray-50">
             {children && React.Children.map(children, (child, index) => {
               if (React.isValidElement(child)) {
-                // Only render children corresponding to current demo stage
-                if (index === demoStage) {
-                  return React.cloneElement(child as React.ReactElement);
-                }
+                // Render all stages, highlight the current one
+                return (
+                  <div
+                    key={index}
+                    className={index === demoStage ?
+                      "border-2 border-blue-500 rounded-lg mb-6 bg-white shadow-lg transition-all" :
+                      "opacity-60 mb-6"
+                    }
+                    style={{ pointerEvents: index === demoStage ? 'auto' : 'none' }}
+                  >
+                    {React.cloneElement(child as React.ReactElement)}
+                  </div>
+                );
               }
               return null;
             })}

@@ -79,6 +79,13 @@ export const AgentHub: React.FC = () => {
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           agent={agentData.find(agent => agent.id === selectedAgent)!}
+          onTagClick={(tag) => {
+            const found = agentData.find(agent => agent.tags?.includes(tag));
+            if (found) {
+              setSelectedAgent(found.id);
+              setIsModalOpen(true);
+            }
+          }}
         >
           {renderDemoComponent(selectedAgent)}
         </AgentDemoContainer>

@@ -8,6 +8,7 @@ export interface Agent {
   capabilities: string;
   icon: ReactNode;
   demoConversation: { role: string; content: string }[];
+  tags?: string[];
 }
 
 export interface GraphData {

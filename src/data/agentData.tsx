@@ -29,7 +29,8 @@ export const agentData: Agent[] = [
       { role: 'agent', content: 'I\'ve identified three options to address the April liquidity gap:\n\n1. Accelerate collections from Enterprise clients Microsoft and Adobe ($1.8M available, 90% probability)\n2. Delay the AWS payment by 7 days (no penalty per terms)\n3. Temporarily draw $2M from the revolving credit facility (current utilization: 15%)\n\nBased on historical patterns, Option 1 has the highest ROI. Shall I prepare the AR acceleration notices?' },
       { role: 'user', content: 'Yes, please prepare the AR acceleration. What would be the working capital impact?' },
       { role: 'agent', content: 'Preparing AR acceleration notices for Microsoft and Adobe.\n\nWorking capital impact:\n• DSO reduction: 2.3 days this quarter\n• Yield on cash increase: +4.2 pp (due to avoiding credit facility costs)\n• Additional interest income: $14,300\n\nI\'ll also update the treasury dashboard and alert the AR team to prioritize follow-up calls. The notices will be sent with optimized timing at 8:15am local recipient time for maximum open rates.' }
-    ]
+    ],
+    tags: ['Cash-Flow', 'Forecast', 'Liquidity', 'Scenario', 'Working Capital'],
   },
   {
     id: 2,
@@ -45,7 +46,8 @@ export const agentData: Agent[] = [
       { role: 'agent', content: 'Here are the tailored strategies:\n\n1. Acme Corp ($580K):\n   • Risk factors: Earnings miss, CEO transition, pattern of paying only after escalation\n   • Strategy: Immediate SVP-to-SVP call (drafted talking points), offer 2% discount for payment within 48hrs\n   • Expected recovery: 85-90% within 10 days\n\n2. TechGiant ($320K):\n   • Analysis shows invoice was sent to wrong AP contact after their March reorg\n   • Strategy: Resend to new AP director (Sarah Chen) with updated PO reference\n   • Expected recovery: 100% within 7 days\n\n3. InnoSystems ($175K dispute):\n   • Invoice line item 4 challenged (implementation services)\n   • Strategy: Offer split payment option with consulting hours credit\n   • Expected recovery: 80% immediately, 20% as service credit\n\nShall I implement these strategies?' },
       { role: 'user', content: 'Implement for TechGiant and InnoSystems, but let me review the Acme strategy first.' },
       { role: 'agent', content: 'Implementing collection strategies for TechGiant and InnoSystems:\n\n✓ TechGiant: Invoice resent to Sarah Chen with correct PO#TG-29581\n✓ InnoSystems: Split payment proposal sent to their AP team\n\nAcme Corp strategy is ready for your review in the Collections Dashboard. I\'ve also prepared talking points for the SVP call and calculated that the 2% discount ($11,600) is financially justified based on our current cost of capital (7.2%) and expected 30+ day acceleration.' }
-    ]
+    ],
+    tags: ['Collections', 'AR', 'DSO', 'Risk', 'Strategy'],
   },
   {
     id: 3,
@@ -61,7 +63,8 @@ export const agentData: Agent[] = [
       { role: 'agent', content: 'Changes applied to payment run for week of May 15-19:\n\n✓ Oracle invoice #OR-29587 ($87,500) flagged for review and temporarily removed from payment batch\n\n✓ Salesforce payment ($732,500) accelerated to May 17 to capture 2% discount, saving $14,650\n\n✓ Other payments left as originally scheduled\n\nI\'ve notified AP Manager Janet Wilson about the Oracle duplicate with comparison details. The modified payment run is ready for final approval in the AP system.\n\nCumulative discount capture this quarter: $41,800 (122% of target)' },
       { role: 'user', content: 'Approve changes. Are there any other potential duplicates in our AP system?' },
       { role: 'agent', content: 'Changes approved and submitted.\n\nI\'ve performed a full duplicate detection scan across our AP system and found 3 additional potential duplicates requiring review:\n\n1. AWS invoices #38592 and #38597 ($34,200) - similar amounts, invoice dates 1 day apart\n\n2. WeWork invoices for Chicago and Austin offices ($12,400) - same amount, different location codes but possible consolidation error\n\n3. Adobe Creative Cloud renewals ($9,750) - potential department-level vs. enterprise-level duplicate billing\n\nEstimated savings opportunity: $56,350\n\nWould you like me to prepare a detailed analysis report and route these to the appropriate approvers for investigation?' }
-    ]
+    ],
+    tags: ['AP', 'Payments', 'Discounts', 'Duplicates', 'Optimization'],
   },
   {
     id: 4,
@@ -77,7 +80,8 @@ export const agentData: Agent[] = [
       { role: 'agent', content: 'Escalations sent:\n\n1. Singapore OPEX: Notified APAC Controller and Singapore Office Manager via Slack and email (with backup template form for quick completion)\n\n2. Sales Commissions: Scheduled urgent meeting with Sales Ops Director and Compensation Analyst at 2pm today\n\nAutomation improvements for June close:\n\n1. Singapore Office: Implement auto-extraction from local accounting system instead of manual submission (est. 4 hours setup)\n\n2. Sales Commissions: Create pre-close validation workflow to identify commission calculation issues 2 days before close starts\n\n3. APAC Intercompany: Implement robotics process automation (RPA) for repetitive elements - est. reduction of 8 hours per close\n\n4. Marketing Accruals: Add API connection to event management platform for real-time expense data\n\nThese improvements could reduce close by 1.5 days next month. Shall I prepare implementation plans?' },
       { role: 'user', content: 'Prepare the implementation plans, but prioritize the Singapore and commission issues first.' },
       { role: 'agent', content: 'Implementation plans prepared and prioritized:\n\nIMMEDIATE (for June close):\n1. Singapore Office Automation\n   - Auto-extraction script developed by June 15\n   - Test run with parallel manual process by June 20\n   - Full implementation for June close\n   - Assigned to: Dev Team + APAC Accounting\n\n2. Sales Commission Pre-validation\n   - Build validation ruleset by June 10\n   - Create exception dashboard by June 17\n   - Schedule pre-close validation for June 26\n   - Assigned to: BI Team + Sales Ops\n\nFUTURE PHASE (for July close):\n3. APAC Intercompany RPA\n4. Marketing Accruals API integration\n\nEstimated resource requirements: 38 developer hours, 12 accounting SME hours\nEstimated close time reduction: 1 day (June), 1.5 days (July)\n\nWould you like to schedule a kickoff meeting with the implementation teams?' }
-    ]
+    ],
+    tags: ['Close', 'Orchestration', 'Automation', 'JE', 'Reconciliation'],
   },
   {
     id: 5,
