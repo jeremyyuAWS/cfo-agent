@@ -72,24 +72,28 @@ export const AgentDemoContainer: React.FC<AgentDemoContainerProps> = ({
   }, [currentMessageIndex, demoStage, isDemoComplete, agent.demoConversation.length]);
 
   const handleNextMessage = () => {
-    if (currentMessageIndex < agent.demoConversation.length && !isDemoComplete) {
-      setIsTyping(true);
-      
-      setTimeout(() => {
-        setConversation(prev => [
-          ...prev, 
-          agent.demoConversation[currentMessageIndex]
-        ]);
-        setIsTyping(false);
-        setCurrentMessageIndex(prev => prev + 1);
-        
-        // Schedule next message if there are more and demo isn't complete
-        if (currentMessageIndex + 1 < agent.demoConversation.length && !isDemoComplete) {
-          const delay = agent.demoConversation[currentMessageIndex].role === 'user' ? 1000 : 1500;
-          setTimeout(handleNextMessage, delay);
-        }
-      }, agent.demoConversation[currentMessageIndex].role === 'agent' ? 1000 : 500);
-    }
+    setCurrentMessageIndex(prevIndex => {
+      if (prevIndex < agent.demoConversation.length && !isDemoComplete) {
+        setIsTyping(true);
+
+        setTimeout(() => {
+          setConversation(prevConv => [
+            ...prevConv,
+            agent.demoConversation[prevIndex]
+          ]);
+          setIsTyping(false);
+
+          // Schedule next message if there are more and demo isn't complete
+          if (prevIndex + 1 < agent.demoConversation.length && !isDemoComplete) {
+            const delay = agent.demoConversation[prevIndex].role === 'user' ? 1000 : 1500;
+            setTimeout(handleNextMessage, delay);
+          }
+        }, agent.demoConversation[prevIndex].role === 'agent' ? 1000 : 500);
+
+        return prevIndex + 1;
+      }
+      return prevIndex;
+    });
   };
 
   if (!isOpen) return null;
