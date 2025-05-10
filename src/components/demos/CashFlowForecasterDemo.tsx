@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ChartComponent, ChartType } from './ChartComponent';
 import { DashboardMockup } from './DashboardMockup';
 import { ProcessFlow } from './ProcessFlow';
 import { DollarSign, ArrowUp, TrendingUp, BarChart } from 'lucide-react';
 
 export const CashFlowForecasterDemo: React.FC = () => {
+  // Scenario toggles
+  const [scenario, setScenario] = useState<'original' | 'ar' | 'credit'>('ar');
+
+  // Data for each scenario
+  const chartData = {
+    original: [4.2, 4.8, 5.1, 4.6, 3.2, 2.6, 3.9],
+    ar: [4.2, 4.8, 5.1, 5.8, 4.7, 4.1, 5.2],
+    credit: [4.2, 4.8, 5.1, 4.6, 4.2, 4.1, 4.9],
+  };
+
+  const summary = {
+    original: { dso: '4.6 days', yield: '+2.1 pp', interest: '$0' },
+    ar: { dso: '2.3 days', yield: '+4.2 pp', interest: '$14,300' },
+    credit: { dso: '4.6 days', yield: '+2.7 pp', interest: '$7,800' },
+  };
+
   const stages = [
     // Stage 0: Initial forecast visualization
     <>
@@ -146,23 +162,50 @@ export const CashFlowForecasterDemo: React.FC = () => {
     
     // Stage 2: Solution impact
     <>
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Working Capital Impact: AR Acceleration</h3>
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+      <h3 className="text-lg font-medium text-gray-900 mb-4">Working Capital Impact: {scenario === 'ar' ? 'AR Acceleration' : scenario === 'credit' ? 'Credit Draw' : 'Original Forecast'}</h3>
+      {/* Scenario toggles */}
+      <div className="flex space-x-2 mb-4">
+        <button
+          className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${scenario === 'original' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+          onClick={() => setScenario('original')}
+        >
+          Original
+        </button>
+        <button
+          className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${scenario === 'ar' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+          onClick={() => setScenario('ar')}
+        >
+          With AR Acceleration
+        </button>
+        <button
+          className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${scenario === 'credit' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+          onClick={() => setScenario('credit')}
+        >
+          With Credit Draw
+        </button>
+      </div>
+      {/* Summary cards */}
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="bg-white p-4 rounded-lg border border-blue-200 shadow-sm text-center">
           <div className="text-sm text-gray-500">DSO Reduction</div>
-          <div className="text-2xl font-semibold text-gray-900">2.3 days</div>
+          <div className="text-2xl font-semibold text-blue-700">{summary[scenario].dso}</div>
           <div className="text-xs text-gray-500 mt-1">This quarter</div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+        <div className="bg-white p-4 rounded-lg border border-blue-200 shadow-sm text-center">
           <div className="text-sm text-gray-500">Yield Increase</div>
-          <div className="text-2xl font-semibold text-gray-900">+4.2 pp</div>
+          <div className="text-2xl font-semibold text-blue-700">{summary[scenario].yield}</div>
           <div className="text-xs text-gray-500 mt-1">vs. Credit Facility</div>
         </div>
+        <div className="bg-white p-4 rounded-lg border border-blue-200 shadow-sm text-center">
+          <div className="text-sm text-gray-500">Interest Income</div>
+          <div className="text-2xl font-semibold text-blue-700">{summary[scenario].interest}</div>
+          <div className="text-xs text-gray-500 mt-1">Projected</div>
+        </div>
       </div>
-      
+      {/* Distinct chart with area fill, annotation, and improved legend */}
       <ChartComponent
         type={ChartType.Line}
-        height={200}
+        height={220}
         data={{
           labels: [
             'Apr 1', 'Apr 5', 'Apr 10', 'Apr 15', 'Apr 20', 'Apr 25', 'Apr 30'
@@ -170,21 +213,36 @@ export const CashFlowForecasterDemo: React.FC = () => {
           datasets: [
             {
               label: 'Original Forecast',
-              data: [4.2, 4.8, 5.1, 4.6, 3.2, 2.6, 3.9],
+              data: chartData.original,
               borderColor: '#9ca3af',
-              backgroundColor: 'rgba(156, 163, 175, 0.1)',
+              backgroundColor: 'rgba(156, 163, 175, 0.08)',
               borderWidth: 1,
               tension: 0.4,
-              fill: false,
+              fill: scenario === 'original',
+              pointRadius: 2,
+              hidden: scenario !== 'original',
             },
             {
               label: 'With AR Acceleration',
-              data: [4.2, 4.8, 5.1, 5.8, 4.7, 4.1, 5.2],
-              borderColor: '#1f2937',
-              backgroundColor: 'rgba(31, 41, 55, 0.1)',
+              data: chartData.ar,
+              borderColor: '#2563eb',
+              backgroundColor: 'rgba(37, 99, 235, 0.15)',
               borderWidth: 2,
               tension: 0.4,
-              fill: true,
+              fill: scenario === 'ar',
+              pointRadius: 3,
+              hidden: scenario !== 'ar',
+            },
+            {
+              label: 'With Credit Draw',
+              data: chartData.credit,
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.12)',
+              borderWidth: 2,
+              tension: 0.4,
+              fill: scenario === 'credit',
+              pointRadius: 3,
+              hidden: scenario !== 'credit',
             },
             {
               label: 'Minimum Threshold',
@@ -192,10 +250,70 @@ export const CashFlowForecasterDemo: React.FC = () => {
               borderColor: '#ef4444',
               backgroundColor: 'rgba(239, 68, 68, 0)',
               borderWidth: 1,
-              borderDashed: [5, 5],
-              pointRadius: 0
+              borderDash: [5, 5],
+              pointRadius: 0,
+              fill: false,
             }
           ]
+        }}
+        options={{
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                usePointStyle: true,
+                font: { size: 13 },
+                color: '#374151',
+              }
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: $${context.parsed.y.toFixed(2)}M`;
+                }
+              }
+            },
+            annotation: {
+              annotations: {
+                impact: scenario === 'ar' ? {
+                  type: 'box',
+                  xMin: 3,
+                  xMax: 4,
+                  yMin: 3.5,
+                  yMax: 5.8,
+                  backgroundColor: 'rgba(37, 99, 235, 0.08)',
+                  borderColor: '#2563eb',
+                  borderWidth: 1,
+                  label: {
+                    content: 'AR Acceleration Impact',
+                    enabled: true,
+                    position: 'start',
+                    color: '#2563eb',
+                    font: { weight: 'bold' }
+                  }
+                } : undefined
+              }
+            }
+          },
+          scales: {
+            y: {
+              title: {
+                display: true,
+                text: 'Cash (Millions $)'
+              },
+              min: 2,
+              max: 6.5,
+              grid: { color: '#f3f4f6' },
+              ticks: { color: '#6b7280' }
+            },
+            x: {
+              grid: { color: '#f3f4f6' },
+              ticks: { color: '#6b7280' }
+            }
+          }
         }}
       />
       
