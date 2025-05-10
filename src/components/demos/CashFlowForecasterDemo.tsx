@@ -7,6 +7,7 @@ import { DollarSign, ArrowUp, TrendingUp, BarChart } from 'lucide-react';
 export const CashFlowForecasterDemo: React.FC = () => {
   // Scenario toggles
   const [scenario, setScenario] = useState<'original' | 'ar' | 'credit'>('ar');
+  const [drilldown, setDrilldown] = useState<{ label: string; value: number } | null>(null);
 
   // Data for each scenario
   const chartData = {
@@ -19,6 +20,19 @@ export const CashFlowForecasterDemo: React.FC = () => {
     original: { dso: '4.6 days', yield: '+2.1 pp', interest: '$0' },
     ar: { dso: '2.3 days', yield: '+4.2 pp', interest: '$14,300' },
     credit: { dso: '4.6 days', yield: '+2.7 pp', interest: '$7,800' },
+  };
+
+  // Sample industry benchmark (flat line for demo)
+  const industryBenchmark = {
+    label: 'Industry Benchmark',
+    data: [3.8, 4.0, 4.1, 4.2, 4.1, 4.0, 4.1],
+    borderColor: '#f59e42',
+    backgroundColor: 'rgba(245, 158, 66, 0.08)',
+    borderWidth: 2,
+    borderDash: [6, 4],
+    pointRadius: 0,
+    fill: false,
+    hidden: false,
   };
 
   const stages = [
@@ -202,7 +216,7 @@ export const CashFlowForecasterDemo: React.FC = () => {
           <div className="text-xs text-gray-500 mt-1">Projected</div>
         </div>
       </div>
-      {/* Distinct chart with area fill, annotation, and improved legend */}
+      {/* Distinct chart with area fill, annotation, improved legend, industry benchmark, and drill-down */}
       <ChartComponent
         type={ChartType.Line}
         height={220}
@@ -315,6 +329,8 @@ export const CashFlowForecasterDemo: React.FC = () => {
             }
           }
         }}
+        extraDatasets={[industryBenchmark]}
+        onPointClick={({ label, value }) => setDrilldown({ label, value })}
       />
       
       <div className="mt-4">
