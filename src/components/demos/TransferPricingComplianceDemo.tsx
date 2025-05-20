@@ -2,7 +2,7 @@ import React from 'react';
 import { ChartComponent, ChartType } from './ChartComponent';
 import { DashboardMockup } from './DashboardMockup';
 import { ProcessFlow } from './ProcessFlow';
-import { Scale, AlertTriangle, FileCheck, Globe, FileText, Shield } from 'lucide-react';
+import { Scale, AlertTriangle, FileCheck, Globe, FileText, Shield, BarChart, Bot } from 'lucide-react';
 
 export const TransferPricingComplianceDemo: React.FC = () => {
   const stages = [
